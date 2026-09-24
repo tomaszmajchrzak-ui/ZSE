@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ćwiczenia praktyczne z JavaScript</title>
+<style>
+:root {
+  --navy: #1B1F3B;
+  --navy2: #262B52;
+  --slate: #3E4C7A;
+  --yellow: #F7DF1E;
+  --white: #FFFFFF;
+  --offwhite: #F4F5FA;
+  --text-dark: #1B1F3B;
+  --text-muted: #5A6285;
+  --code-bg: #0D1117;
+  --code-text: #E6EDF3;
+  --good: #2ECC71;
+  --bad: #FF6B6B;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Calibri, "Segoe UI", Arial, sans-serif;
+  background: var(--offwhite);
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  color: var(--white);
+  padding: 36px 24px 28px;
+  text-align: center;
+}
+header .kicker {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+header h1 {
+  font-family: Cambria, Georgia, serif;
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+header p.subtitle {
+  margin: 0;
+  color: #C9CEE8;
+  font-size: 15px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+nav.toc {
+  max-width: 980px;
+  margin: -18px auto 0;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+nav.toc ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 14px;
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(27,31,59,0.14);
+}
+nav.toc a {
+  display: block;
+  text-decoration: none;
+  color: var(--navy);
+  background: var(--offwhite);
+  border: 1px solid #E1E4F0;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+nav.toc a:hover { background: var(--yellow); border-color: var(--yellow); }
+main {
+  max-width: 980px;
+  margin: 34px auto 60px;
+  padding: 0 24px;
+}
+.intro-box {
+  background: var(--white);
+  border: 1px solid #E1E4F0;
+  border-left: 5px solid var(--yellow);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 30px;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+.intro-box strong { color: var(--text-dark); }
+.exercise {
+  background: var(--white);
+  border: 1px solid #E1E4F0;
+  border-radius: 14px;
+  padding: 26px 28px 24px;
+  margin-bottom: 26px;
+  box-shadow: 0 4px 14px rgba(27,31,59,0.05);
+  scroll-margin-top: 16px;
+}
+.exercise .part-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--slate);
+  background: #EEF0FA;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.exercise h2 {
+  font-family: Cambria, Georgia, serif;
+  color: var(--navy);
+  margin: 0 0 4px;
+  font-size: 21px;
+}
+.exercise .goal {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 14px;
+  font-style: italic;
+}
+.exercise .task {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+details.hint {
+  margin: 0 0 16px;
+  background: #FFFBEA;
+  border: 1px solid #F4E8A8;
+  border-radius: 8px;
+  padding: 8px 14px;
+}
+details.hint summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #8A6D00;
+  font-size: 13px;
+}
+details.hint p { margin: 8px 0 2px; font-size: 13.5px; color: #6B5900; }
+.teacher-note {
+  background: #EAF7EE;
+  border: 1px solid #BFE6C9;
+  border-left: 5px solid var(--good);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  color: #1E6B39;
+}
+.teacher-note strong { color: #144D28; }
+.editor-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  margin: 0 0 6px;
+}
+textarea.code-editor {
+  width: 100%;
+  min-height: 230px;
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.55;
+  border: none;
+  border-radius: 10px;
+  padding: 16px 18px;
+  resize: vertical;
+  tab-size: 2;
+  white-space: pre;
+}
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0 14px;
+  flex-wrap: wrap;
+}
+button.btn {
+  font-family: Calibri, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+button.btn-run { background: var(--yellow); color: var(--navy); }
+button.btn-run:hover { background: #ffe95c; }
+button.btn-reset { background: var(--offwhite); color: var(--navy); border: 1px solid #D3D7EA; }
+button.btn-reset:hover { background: #E7E9F5; }
+.output-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  margin: 4px 0 6px;
+}
+pre.output {
+  background: #11142B;
+  color: #C9F7D9;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 13px;
+  border-radius: 10px;
+  padding: 14px 18px;
+  min-height: 48px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre.output.output-error { color: #FFB4B4; }
+footer.page-footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  padding: 20px 24px 40px;
+}
+</style>
+</head>
+<body>
+<header>
+  <span class="kicker">INF.03 · JavaScript · Ćwiczenia</span>
+  <h1>Ćwiczenia praktyczne z JavaScript</h1>
+  <p class="subtitle">Jedno zadanie do każdego z zagadnień poznanych na lekcjach (części 1–5) — uzupełnij kod i sprawdź wynik w przeglądarce.</p>
+</header>
+<nav class="toc">
+  <ul>
+      <li><a href="#zadanie-1">1. Dane ucznia</a></li>
+      <li><a href="#zadanie-2">2. Mini-kalkulator</a></li>
+      <li><a href="#zadanie-3">3. Opis oceny i nazwa dnia tygodnia</a></li>
+      <li><a href="#zadanie-4">4. Tabliczka mnożenia i suma cyfr</a></li>
+      <li><a href="#zadanie-5">5. Pole i obwód prostokąta</a></li>
+      <li><a href="#zadanie-6">6. Funkcje strzałkowe</a></li>
+      <li><a href="#zadanie-7">7. Zaokrąglanie cen i losowanie</a></li>
+      <li><a href="#zadanie-8">8. Przetwarzanie imienia i nazwiska</a></li>
+      <li><a href="#zadanie-9">9. Zmienna globalna i lokalna</a></li>
+      <li><a href="#zadanie-10">10. Obiekt produktu w sklepie</a></li>
+      <li><a href="#zadanie-11">11. Kartoteka ucznia</a></li>
+  </ul>
+</nav>
+<main>
+  <div class="intro-box">Każde zadanie dotyczy jednego zagadnienia poznanego na lekcjach JavaScript (części 1–5, kurs INF.03). Uzupełnij kod w polu edycji w miejscach oznaczonych <strong>TODO</strong> (podkreślnik <strong>___</strong> oznacza miejsce do uzupełnienia), a następnie kliknij <strong>„Uruchom kod”</strong>, aby zobaczyć wynik działania programu w panelu „Wynik (konsola)” poniżej. Przycisk <strong>„Resetuj kod”</strong> przywraca treść zadania do stanu początkowego. Kod wykonywany jest bezpośrednio w przeglądarce — nie wymaga instalowania żadnych dodatkowych programów.</div>
+  <section class="exercise" id="zadanie-1">
+  <span class="part-tag">Część 1 – Zmienne i typy danych</span>
+  <h2>Zadanie 1: Dane ucznia</h2>
+  <p class="goal">Poćwicz deklarowanie zmiennych (const), podstawowe typy danych (string, number, boolean) oraz operator typeof.</p>
+  <p class="task">Uzupełnij kod tak, aby zadeklarować cztery zmienne opisujące ucznia: imię (tekst), wiek (liczba), średnią ocen (liczba) oraz informację, czy uczeń podchodzi do egzaminu (wartość logiczna). Następnie wypisz w konsoli zdanie podsumowujące te dane za pomocą template literals oraz wypisz typ każdej zmiennej za pomocą operatora typeof.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Pamiętaj, że tekst zapisujemy w cudzysłowie, a wartości logiczne to true/false (bez cudzysłowu). Template literal zaczyna się i kończy znakiem backtick ` `, a wstawienie zmiennej wygląda tak: ${nazwaZmiennej}.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-1" spellcheck="false">// Zadanie 1: Zmienne i typy danych
+// Uzupełnij kod tak, aby opisać ucznia i wypisać dane w konsoli.
+
+// TODO 1: zadeklaruj stałą imieUcznia (tekst - string) z dowolnym imieniem
+const imieUcznia = ___;
+
+// TODO 2: zadeklaruj stałą wiekUcznia (liczba - number)
+const wiekUcznia = ___;
+
+// TODO 3: zadeklaruj stałą sredniaOcen (liczba, np. 4.75)
+const sredniaOcen = ___;
+
+// TODO 4: zadeklaruj stałą zdajeEgzamin (wartość logiczna - boolean)
+const zdajeEgzamin = ___;
+
+// TODO 5: za pomocą template literal (`...${zmienna}...`) wypisz zdanie:
+// &quot;Uczeń: &lt;imię&gt;, wiek: &lt;wiek&gt; lat, średnia: &lt;średnia&gt;&quot;
+console.log(___);
+
+// TODO 6: wypisz typ (typeof) każdej z czterech zmiennych
+console.log(&quot;typeof imieUcznia:&quot;, ___);
+console.log(&quot;typeof wiekUcznia:&quot;, ___);
+console.log(&quot;typeof sredniaOcen:&quot;, ___);
+console.log(&quot;typeof zdajeEgzamin:&quot;, ___);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(1)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(1)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-1"></pre>
+</section>
+
+<section class="exercise" id="zadanie-2">
+  <span class="part-tag">Część 1 – Operatory</span>
+  <h2>Zadanie 2: Mini-kalkulator</h2>
+  <p class="goal">Poćwicz operatory arytmetyczne, porównania oraz operatory przypisania złożonego (++, +=).</p>
+  <p class="task">Oblicz i wypisz w konsoli: sumę, różnicę, iloczyn, iloraz, resztę z dzielenia (%) oraz a podniesione do potęgi 2 (**) dwóch podanych liczb. Sprawdź i wypisz, czy a jest większe od b oraz czy a jest równe b (operator ===). Na koniec zadeklaruj zmienną licznik (let), zwiększ ją o 1 operatorem ++, a następnie zwiększ ją o wartość a operatorem +=, i wypisz wynik.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Operator % zwraca resztę z dzielenia, np. 17 % 5 = 2. Operator ** to potęgowanie: a ** 2 to a do kwadratu.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-2" spellcheck="false">// Zadanie 2: Operatory
+// Uzupełnij kod, aby zbudować mini-kalkulator dla dwóch liczb.
+
+const a = 17;
+const b = 5;
+
+// TODO 1: wypisz sumę, różnicę, iloczyn, iloraz i resztę z dzielenia a i b
+console.log(&quot;Suma:&quot;, ___);
+console.log(&quot;Różnica:&quot;, ___);
+console.log(&quot;Iloczyn:&quot;, ___);
+console.log(&quot;Iloraz:&quot;, ___);
+console.log(&quot;Reszta z dzielenia:&quot;, ___);
+
+// TODO 2: wypisz a podniesione do potęgi 2 (operator **)
+console.log(&quot;a do kwadratu:&quot;, ___);
+
+// TODO 3: sprawdź i wypisz, czy a jest większe od b
+console.log(&quot;Czy a &gt; b?&quot;, ___);
+
+// TODO 4: sprawdź i wypisz, czy a jest równe b (operator ===)
+console.log(&quot;Czy a === b?&quot;, ___);
+
+// TODO 5: zadeklaruj zmienną licznik (let) z wartością 0,
+// zwiększ ją o 1 operatorem ++, a potem zwiększ ją o wartość a operatorem +=
+let licznik = 0;
+___;
+___;
+console.log(&quot;Licznik po ++ i += a:&quot;, licznik);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(2)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(2)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-2"></pre>
+</section>
+
+<section class="exercise" id="zadanie-3">
+  <span class="part-tag">Część 2 – Instrukcje warunkowe</span>
+  <h2>Zadanie 3: Opis oceny i nazwa dnia tygodnia</h2>
+  <p class="goal">Poćwicz instrukcję if/else if/else oraz switch.</p>
+  <p class="task">Napisz funkcję opiszOcene(ocena), która za pomocą if/else if/else zwraca słowny opis oceny liczbowej 1-6 (niedostateczny, dopuszczający, dostateczny, dobry, bardzo dobry, celujący). Następnie napisz funkcję nazwaDnia(numerDnia), która za pomocą switch zwraca nazwę dnia tygodnia dla numeru 1-7, a dla innych wartości zwraca komunikat &#39;nieprawidłowy numer dnia&#39;. Przetestuj obie funkcje, wywołując je z różnymi argumentami.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>W switch nie zapomnij o instrukcji return (lub break) w każdym case oraz o przypadku default dla wartości spoza zakresu.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-3" spellcheck="false">// Zadanie 3: Instrukcje warunkowe (if/else, switch)
+
+// TODO 1: uzupełnij funkcję - za pomocą if/else if/else zwróć słowny
+// opis oceny: 6 -&gt; &quot;celujący&quot;, 5 -&gt; &quot;bardzo dobry&quot;, 4 -&gt; &quot;dobry&quot;,
+// 3 -&gt; &quot;dostateczny&quot;, 2 -&gt; &quot;dopuszczający&quot;, pozostałe -&gt; &quot;niedostateczny&quot;
+function opiszOcene(ocena) {
+  if (___) {
+    return &quot;celujący&quot;;
+  }
+  // TODO: dopisz kolejne warunki (else if) dla ocen 5, 4, 3, 2
+  // oraz else zwracające &quot;niedostateczny&quot;
+}
+
+console.log(opiszOcene(5));
+console.log(opiszOcene(2));
+console.log(opiszOcene(1));
+
+// TODO 2: uzupełnij funkcję - za pomocą switch zwróć nazwę dnia tygodnia
+// dla numeru 1-7 (1 = poniedziałek, ..., 7 = niedziela),
+// a dla innych wartości zwróć &quot;nieprawidłowy numer dnia&quot;
+function nazwaDnia(numerDnia) {
+  switch (numerDnia) {
+    case 1:
+      return &quot;poniedziałek&quot;;
+    // TODO: dopisz przypadki case dla 2-7 oraz default
+  }
+}
+
+console.log(nazwaDnia(3));
+console.log(nazwaDnia(9));</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(3)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(3)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-3"></pre>
+</section>
+
+<section class="exercise" id="zadanie-4">
+  <span class="part-tag">Część 2 – Pętle</span>
+  <h2>Zadanie 4: Tabliczka mnożenia i suma cyfr</h2>
+  <p class="goal">Poćwicz pętlę for oraz pętlę while.</p>
+  <p class="task">Napisz funkcję tabliczkaMnozenia(liczba), która za pomocą pętli for (od 1 do 10) buduje i zwraca tekst z tabliczką mnożenia dla podanej liczby. Następnie napisz funkcję sumaCyfr(liczba), która za pomocą pętli while oblicza sumę cyfr podanej liczby całkowitej (np. dla 4829 wynik to 4+8+2+9=23). Wywołaj obie funkcje i wypisz wyniki.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Aby wyciągać kolejne cyfry liczby w pętli while, użyj reszty z dzielenia przez 10 (liczba % 10) oraz Math.floor(liczba / 10), aby &#39;obciąć&#39; ostatnią cyfrę.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-4" spellcheck="false">// Zadanie 4: Pętle (for, while)
+
+// TODO 1: za pomocą pętli for (od i = 1 do i &lt;= 10) zbuduj tekst
+// z tabliczką mnożenia dla podanej liczby, np. &quot;7 x 1 = 7\n7 x 2 = 14\n...&quot;
+function tabliczkaMnozenia(liczba) {
+  let wynik = &quot;&quot;;
+  for (___; ___; ___) {
+    wynik += `${liczba} x ${i} = ${liczba * i}\n`;
+  }
+  return wynik;
+}
+
+console.log(tabliczkaMnozenia(7));
+
+// TODO 2: za pomocą pętli while policz sumę cyfr podanej liczby całkowitej
+// (np. dla 4829: 4 + 8 + 2 + 9 = 23)
+// Wskazówka: n % 10 daje ostatnią cyfrę, Math.floor(n / 10) &quot;obcina&quot; ją
+function sumaCyfr(liczba) {
+  let n = Math.abs(liczba);
+  let suma = 0;
+  while (___) {
+    suma += ___;
+    n = ___;
+  }
+  return suma;
+}
+
+console.log(&quot;Suma cyfr liczby 4829:&quot;, sumaCyfr(4829));
+console.log(&quot;Suma cyfr liczby 100:&quot;, sumaCyfr(100));</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(4)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(4)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-4"></pre>
+</section>
+
+<section class="exercise" id="zadanie-5">
+  <span class="part-tag">Część 3 – Funkcje</span>
+  <h2>Zadanie 5: Pole i obwód prostokąta</h2>
+  <p class="goal">Poćwicz deklarowanie funkcji z parametrami i instrukcją return, w tym funkcję zwracającą obiekt.</p>
+  <p class="task">Napisz funkcję poleProstokata(a, b) zwracającą pole prostokąta oraz funkcję obwodProstokata(a, b) zwracającą jego obwód. Następnie napisz funkcję opiszProstokat(a, b), która wywołuje obie powyższe funkcje i zwraca obiekt postaci { pole: ..., obwod: ... }. Wywołaj opiszProstokat dla boków 6 i 4 i wypisz oba wyniki w konsoli.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Pole prostokąta to a * b, a obwód to 2 * (a + b). Funkcja może zwrócić obiekt tak samo jak liczbę czy tekst - po prostu po return wpisujemy { ... }.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-5" spellcheck="false">// Zadanie 5: Funkcje - deklaracje, parametry, return
+
+// TODO 1: napisz funkcję zwracającą pole prostokąta (a * b)
+function poleProstokata(a, b) {
+  // uzupełnij
+}
+
+// TODO 2: napisz funkcję zwracającą obwód prostokąta (2 * (a + b))
+function obwodProstokata(a, b) {
+  // uzupełnij
+}
+
+// TODO 3: napisz funkcję, która wywołuje obie powyższe funkcje
+// i zwraca obiekt postaci { pole: ..., obwod: ... }
+function opiszProstokat(a, b) {
+  // uzupełnij
+}
+
+const wynik = opiszProstokat(6, 4);
+console.log(`Pole: ${wynik.pole}, obwód: ${wynik.obwod}`);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(5)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(5)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-5"></pre>
+</section>
+
+<section class="exercise" id="zadanie-6">
+  <span class="part-tag">Część 3 – Funkcje strzałkowe</span>
+  <h2>Zadanie 6: Funkcje strzałkowe</h2>
+  <p class="goal">Poćwicz zapis funkcji strzałkowych (arrow function) oraz ich użycie z metodą map().</p>
+  <p class="task">Podana jest zwykła funkcja jestParzysta(liczba). Przepisz ją jako funkcję strzałkową o nazwie jestParzystaStrzalkowa. Następnie napisz funkcję strzałkową podwojKazda(tablica), która zwraca nową tablicę z każdą wartością pomnożoną razy 2 (wykorzystaj metodę tablicy .map()). Sprawdź działanie obu funkcji.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Funkcja strzałkowa jednolinijkowa (bez nawiasów klamrowych) automatycznie zwraca wynik wyrażenia, np. const f = (x) =&gt; x * 2;. Metoda .map(funkcja) tworzy nową tablicę, stosując funkcję do każdego elementu.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-6" spellcheck="false">// Zadanie 6: Funkcje strzałkowe (arrow function)
+
+function jestParzysta(liczba) {
+  return liczba % 2 === 0;
+}
+
+// TODO 1: przepisz powyższą funkcję jako funkcję strzałkową
+// o nazwie jestParzystaStrzalkowa
+const jestParzystaStrzalkowa = ___;
+
+console.log(jestParzysta(8), jestParzystaStrzalkowa(8));
+console.log(jestParzysta(7), jestParzystaStrzalkowa(7));
+
+// TODO 2: napisz funkcję strzałkową podwojKazda(tablica), która zwraca
+// nową tablicę z każdą wartością pomnożoną razy 2 (użyj metody .map())
+const podwojKazda = ___;
+
+console.log(podwojKazda([1, 2, 3]));</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(6)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(6)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-6"></pre>
+</section>
+
+<section class="exercise" id="zadanie-7">
+  <span class="part-tag">Część 4 – Obiekt Math i konwersja typów</span>
+  <h2>Zadanie 7: Zaokrąglanie cen i losowanie</h2>
+  <p class="goal">Poćwicz metody obiektu Math oraz konwersję tekstu na liczby.</p>
+  <p class="task">Dla podanych cen 19.49 i 19.51 wypisz wyniki Math.round(), Math.ceil() i Math.floor(). Napisz funkcję losowaLiczbaCalkowita(min, max), która zwraca losową liczbę całkowitą z podanego zakresu (włącznie z min i max), wykorzystując Math.random() oraz Math.floor(). Na koniec przekonwertuj tekst &#39;42&#39; na liczbę za pomocą Number(), tekst &#39;3.14&#39; za pomocą parseFloat(), oraz sprawdź za pomocą isNaN(), czy Number(&#39;abc&#39;) jest poprawną liczbą.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Wzór na losową liczbę całkowitą z zakresu [min, max]: Math.floor(Math.random() * (max - min + 1)) + min.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-7" spellcheck="false">// Zadanie 7: Obiekt Math i konwersja typów
+
+const cena1 = 19.49;
+const cena2 = 19.51;
+
+// TODO 1: wypisz Math.round(), Math.ceil() i Math.floor() dla obu cen
+console.log(&quot;Math.round(19.49):&quot;, ___);
+console.log(&quot;Math.round(19.51):&quot;, ___);
+console.log(&quot;Math.ceil(19.49):&quot;, ___);
+console.log(&quot;Math.floor(19.51):&quot;, ___);
+
+// TODO 2: uzupełnij funkcję zwracającą losową liczbę całkowitą
+// z zakresu [min, max] (włącznie), wykorzystując Math.random() i Math.floor()
+function losowaLiczbaCalkowita(min, max) {
+  return ___;
+}
+
+const los = losowaLiczbaCalkowita(1, 6);
+console.log(&quot;Losowa liczba 1-6:&quot;, los);
+
+// TODO 3: przekonwertuj tekst &quot;42&quot; na liczbę za pomocą Number()
+console.log(&quot;Number(&#39;42&#39;):&quot;, ___);
+
+// TODO 4: przekonwertuj tekst &quot;3.14&quot; na liczbę za pomocą parseFloat()
+console.log(&quot;parseFloat(&#39;3.14&#39;):&quot;, ___);
+
+// TODO 5: sprawdź za pomocą isNaN(), czy Number(&quot;abc&quot;) jest poprawną liczbą
+console.log(&quot;Number(&#39;abc&#39;) to:&quot;, Number(&quot;abc&quot;), &quot;-&gt; isNaN:&quot;, ___);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(7)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(7)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-7"></pre>
+</section>
+
+<section class="exercise" id="zadanie-8">
+  <span class="part-tag">Część 4 – Metody tekstowe (String)</span>
+  <h2>Zadanie 8: Przetwarzanie imienia i nazwiska</h2>
+  <p class="goal">Poćwicz metody tekstowe: trim, split, charAt, toUpperCase, toLowerCase, includes, length.</p>
+  <p class="task">Dany jest tekst z dodatkowymi spacjami: &#39;  Anna Kowalska  &#39;. Usuń zbędne spacje (trim), podziel wynik na tablicę dwóch elementów [imię, nazwisko] (split), a następnie zbuduj inicjały (pierwsza litera imienia + pierwsza litera nazwiska, wielkimi literami). Wypisz też wersję tekstu wielkimi i małymi literami, sprawdź, czy zawiera fragment &#39;Kowal&#39; (includes) oraz wypisz długość przyciętego tekstu (length).</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>charAt(0) zwraca pierwszy znak tekstu. Metody tekstowe można łączyć w łańcuch, np. tekst.trim().toUpperCase().</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-8" spellcheck="false">// Zadanie 8: Metody tekstowe (String)
+
+const pelneImie = &quot;  Anna Kowalska  &quot;;
+
+// TODO 1: usuń zbędne spacje z początku i końca tekstu (trim)
+const przycieta = ___;
+console.log(&quot;Po trim():&quot;, `&quot;${przycieta}&quot;`);
+
+// TODO 2: podziel przycięty tekst na tablicę [imię, nazwisko] (split)
+const czesci = ___;
+console.log(&quot;Części imienia i nazwiska:&quot;, czesci);
+
+// TODO 3: zbuduj inicjały - pierwsza litera imienia (czesci[0].charAt(0))
+// + pierwsza litera nazwiska, zapisane wielkimi literami (toUpperCase)
+const inicjaly = ___;
+console.log(&quot;Inicjały:&quot;, inicjaly);
+
+// TODO 4: wypisz przycięty tekst wielkimi i małymi literami
+console.log(&quot;Wielkimi literami:&quot;, ___);
+console.log(&quot;Małymi literami:&quot;, ___);
+
+// TODO 5: sprawdź, czy przycięty tekst zawiera fragment &quot;Kowal&quot; (includes)
+console.log(&quot;Czy zawiera &#39;Kowal&#39;:&quot;, ___);
+
+// TODO 6: wypisz długość przyciętego tekstu (length)
+console.log(&quot;Długość imienia i nazwiska:&quot;, ___);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(8)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(8)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-8"></pre>
+</section>
+
+<section class="exercise" id="zadanie-9">
+  <span class="part-tag">Część 4 – Zasięg zmiennych</span>
+  <h2>Zadanie 9: Zmienna globalna i lokalna</h2>
+  <p class="goal">Poćwicz różnicę między zasięgiem globalnym, lokalnym (funkcji) i blokowym (let).</p>
+  <p class="task">Zadeklaruj zmienną globalną poziomTrudnosci o wartości &#39;łatwy&#39;. Napisz funkcję zmienPoziom(), która deklaruje WEWNĄTRZ siebie lokalną zmienną o tej samej nazwie z wartością &#39;trudny&#39; i wypisuje ją w konsoli. Wypisz wartość zmiennej globalnej przed wywołaniem funkcji, wywołaj funkcję, a następnie wypisz wartość zmiennej globalnej ponownie - sprawdź, czy się zmieniła. Na koniec, sprawdź za pomocą typeof, czy zmienna i (z pętli for) istnieje poza pętlą.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Zmienna zadeklarowana wewnątrz funkcji za pomocą let/const &#39;przesłania&#39; (ukrywa) zmienną globalną o tej samej nazwie - zmiany lokalnej zmiennej nie wpływają na globalną.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-9" spellcheck="false">// Zadanie 9: Zasięg zmiennych (scope)
+
+// TODO 1: zadeklaruj zmienną globalną poziomTrudnosci z wartością &quot;łatwy&quot;
+let poziomTrudnosci = ___;
+
+// TODO 2: uzupełnij funkcję - zmienna poziomTrudnosci poniżej jest
+// zadeklarowana (let) WEWNĄTRZ funkcji, więc jest lokalna i przesłania
+// zmienną globalną o tej samej nazwie - wpisz dla niej wartość &quot;trudny&quot;
+function zmienPoziom() {
+  let poziomTrudnosci = ___;
+  console.log(&quot;Wewnątrz funkcji:&quot;, poziomTrudnosci);
+}
+
+console.log(&quot;Przed wywołaniem funkcji:&quot;, poziomTrudnosci);
+zmienPoziom();
+console.log(&quot;Po wywołaniu funkcji:&quot;, poziomTrudnosci);
+
+// TODO 3: sprawdź za pomocą typeof, czy zmienna i (zadeklarowana let
+// w pętli poniżej) jest dostępna POZA pętlą
+for (let i = 0; i &lt; 3; i++) {
+  // i jest widoczne tylko wewnątrz tego bloku
+}
+console.log(&quot;Czy zmienna i istnieje poza pętlą?&quot;, ___);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(9)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(9)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-9"></pre>
+</section>
+
+<section class="exercise" id="zadanie-10">
+  <span class="part-tag">Część 5 – Obiekty: właściwości, metody, this</span>
+  <h2>Zadanie 10: Obiekt produktu w sklepie</h2>
+  <p class="goal">Poćwicz tworzenie obiektu z właściwościami i metodami oraz użycie słowa kluczowego this.</p>
+  <p class="task">Stwórz obiekt produkt z właściwościami: nazwa, cena, ilosc. Dodaj metodę wartoscLaczna(), która zwraca cena * ilosc obiektu, na którym jest wywoływana (użyj this). Dodaj metodę opisz(), która zwraca tekst w stylu &#39;Klawiatura mechaniczna: 3 szt. x 250 zł = 750 zł&#39; (wykorzystując this oraz wywołanie this.wartoscLaczna() wewnątrz opisz()). Wywołaj obie metody, następnie zmień właściwość ilosc i sprawdź, czy wynik się zaktualizował.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Wewnątrz metody obiektu this odnosi się do obiektu, na którym metoda została wywołana - this.cena to właściwość cena TEGO obiektu.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-10" spellcheck="false">// Zadanie 10: Obiekty - właściwości, metody, this
+
+const produkt = {
+  nazwa: &quot;Klawiatura mechaniczna&quot;,
+  cena: 250,
+  ilosc: 3,
+
+  // TODO 1: napisz metodę wartoscLaczna(), która zwraca cena * ilosc
+  // TEGO obiektu (użyj this.cena oraz this.ilosc)
+  wartoscLaczna() {
+    // uzupełnij
+  },
+
+  // TODO 2: napisz metodę opisz(), która zwraca tekst w stylu
+  // &quot;Klawiatura mechaniczna: 3 szt. x 250 zł = 750 zł&quot;
+  // (wykorzystaj this.nazwa, this.ilosc, this.cena oraz this.wartoscLaczna())
+  opisz() {
+    // uzupełnij
+  },
+};
+
+console.log(produkt.opisz());
+console.log(&quot;Wartość łączna:&quot;, produkt.wartoscLaczna());
+
+// TODO 3: zmień właściwość ilosc na 5 i sprawdź, czy opisz() się zaktualizował
+___;
+console.log(&quot;Po zmianie ilości:&quot;, produkt.opisz());</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(10)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(10)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-10"></pre>
+</section>
+
+<section class="exercise" id="zadanie-11">
+  <span class="part-tag">Część 5 – Obiekty zagnieżdżone, for...in, kopiowanie</span>
+  <h2>Zadanie 11: Kartoteka ucznia</h2>
+  <p class="goal">Poćwicz obiekty zagnieżdżone, pętlę for...in oraz płytką kopię obiektu (spread).</p>
+  <p class="task">Stwórz obiekt uczen z właściwościami: imie, klasa, zagnieżdżonym obiektem adres ({ miasto, ulica }) oraz tablicą oceny. Za pomocą pętli for...in wypisz wszystkie właściwości najwyższego poziomu obiektu uczen. Oblicz średnią ocen z tablicy oceny i wypisz ją zaokrągloną do dwóch miejsc po przecinku (toFixed(2)). Na koniec utwórz płytką kopię obiektu operatorem rozproszenia ({ ...uczen }), zmień w kopii miasto w zagnieżdżonym obiekcie adres, a następnie sprawdź, czy ta zmiana &#39;przeciekła&#39; też do oryginalnego obiektu - wyjaśnij dlaczego.</p>
+  <details class="hint">
+    <summary>Wskazówka</summary>
+    <p>Operator spread { ...obiekt } kopiuje właściwości TYLKO na najwyższym poziomie - obiekty zagnieżdżone (jak adres) są nadal tą samą referencją w obu obiektach.</p>
+  </details>
+  
+  <p class="editor-label">Kod JavaScript (edytowalny)</p>
+  <textarea class="code-editor" id="code-11" spellcheck="false">// Zadanie 11: Obiekty zagnieżdżone, pętla for...in, kopiowanie obiektu
+
+const uczen = {
+  imie: &quot;Marek&quot;,
+  klasa: &quot;3TI&quot;,
+  // TODO 1: dodaj zagnieżdżony obiekt adres z właściwościami
+  // miasto (&quot;Poznań&quot;) i ulica (&quot;Szkolna 5&quot;)
+  adres: ___,
+  oceny: [4, 5, 3, 5, 4],
+};
+
+// TODO 2: za pomocą pętli for...in wypisz wszystkie właściwości
+// najwyższego poziomu obiektu uczen (nazwę klucza i jego wartość)
+for (___) {
+  console.log(___, &quot;=&gt;&quot;, ___);
+}
+
+// TODO 3: oblicz średnią ocen z tablicy uczen.oceny
+// (możesz użyć reduce() lub zwykłej pętli) i wypisz ją z dwoma
+// miejscami po przecinku (toFixed(2))
+const sredniaOcen = ___;
+console.log(&quot;Średnia ocen:&quot;, sredniaOcen);
+
+// TODO 4: utwórz płytką kopię obiektu uczen operatorem rozproszenia
+const kopiaPlytka = ___;
+
+// TODO 5: zmień w kopii miasto w zagnieżdżonym obiekcie adres
+kopiaPlytka.adres.miasto = &quot;Warszawa&quot;;
+
+// TODO 6: sprawdź i wypisz, czy ta zmiana wpłynęła też na oryginalny
+// obiekt uczen - i zastanów się, dlaczego (patrz materiał nauczyciela cz.5)
+console.log(&quot;Miasto w oryginale po zmianie kopii:&quot;, ___);</textarea>
+  <div class="btn-row">
+    <button class="btn btn-run" onclick="runExercise(11)">▶ Uruchom kod</button>
+    <button class="btn btn-reset" onclick="resetExercise(11)">↺ Resetuj kod</button>
+  </div>
+  <p class="output-label">Wynik (konsola)</p>
+  <pre class="output" id="output-11"></pre>
+</section>
+</main>
+<footer class="page-footer">JavaScript dla INF.03 (Programowanie aplikacji internetowych) — zestaw ćwiczeń praktycznych, części 1–5.</footer>
+<script>
+const EXERCISES = [{"id":1,"code":"// Zadanie 1: Zmienne i typy danych\n// Uzupełnij kod tak, aby opisać ucznia i wypisać dane w konsoli.\n\n// TODO 1: zadeklaruj stałą imieUcznia (tekst - string) z dowolnym imieniem\nconst imieUcznia = ___;\n\n// TODO 2: zadeklaruj stałą wiekUcznia (liczba - number)\nconst wiekUcznia = ___;\n\n// TODO 3: zadeklaruj stałą sredniaOcen (liczba, np. 4.75)\nconst sredniaOcen = ___;\n\n// TODO 4: zadeklaruj stałą zdajeEgzamin (wartość logiczna - boolean)\nconst zdajeEgzamin = ___;\n\n// TODO 5: za pomocą template literal (`...${zmienna}...`) wypisz zdanie:\n// \"Uczeń: <imię>, wiek: <wiek> lat, średnia: <średnia>\"\nconsole.log(___);\n\n// TODO 6: wypisz typ (typeof) każdej z czterech zmiennych\nconsole.log(\"typeof imieUcznia:\", ___);\nconsole.log(\"typeof wiekUcznia:\", ___);\nconsole.log(\"typeof sredniaOcen:\", ___);\nconsole.log(\"typeof zdajeEgzamin:\", ___);"},{"id":2,"code":"// Zadanie 2: Operatory\n// Uzupełnij kod, aby zbudować mini-kalkulator dla dwóch liczb.\n\nconst a = 17;\nconst b = 5;\n\n// TODO 1: wypisz sumę, różnicę, iloczyn, iloraz i resztę z dzielenia a i b\nconsole.log(\"Suma:\", ___);\nconsole.log(\"Różnica:\", ___);\nconsole.log(\"Iloczyn:\", ___);\nconsole.log(\"Iloraz:\", ___);\nconsole.log(\"Reszta z dzielenia:\", ___);\n\n// TODO 2: wypisz a podniesione do potęgi 2 (operator **)\nconsole.log(\"a do kwadratu:\", ___);\n\n// TODO 3: sprawdź i wypisz, czy a jest większe od b\nconsole.log(\"Czy a > b?\", ___);\n\n// TODO 4: sprawdź i wypisz, czy a jest równe b (operator ===)\nconsole.log(\"Czy a === b?\", ___);\n\n// TODO 5: zadeklaruj zmienną licznik (let) z wartością 0,\n// zwiększ ją o 1 operatorem ++, a potem zwiększ ją o wartość a operatorem +=\nlet licznik = 0;\n___;\n___;\nconsole.log(\"Licznik po ++ i += a:\", licznik);"},{"id":3,"code":"// Zadanie 3: Instrukcje warunkowe (if/else, switch)\n\n// TODO 1: uzupełnij funkcję - za pomocą if/else if/else zwróć słowny\n// opis oceny: 6 -> \"celujący\", 5 -> \"bardzo dobry\", 4 -> \"dobry\",\n// 3 -> \"dostateczny\", 2 -> \"dopuszczający\", pozostałe -> \"niedostateczny\"\nfunction opiszOcene(ocena) {\n  if (___) {\n    return \"celujący\";\n  }\n  // TODO: dopisz kolejne warunki (else if) dla ocen 5, 4, 3, 2\n  // oraz else zwracające \"niedostateczny\"\n}\n\nconsole.log(opiszOcene(5));\nconsole.log(opiszOcene(2));\nconsole.log(opiszOcene(1));\n\n// TODO 2: uzupełnij funkcję - za pomocą switch zwróć nazwę dnia tygodnia\n// dla numeru 1-7 (1 = poniedziałek, ..., 7 = niedziela),\n// a dla innych wartości zwróć \"nieprawidłowy numer dnia\"\nfunction nazwaDnia(numerDnia) {\n  switch (numerDnia) {\n    case 1:\n      return \"poniedziałek\";\n    // TODO: dopisz przypadki case dla 2-7 oraz default\n  }\n}\n\nconsole.log(nazwaDnia(3));\nconsole.log(nazwaDnia(9));"},{"id":4,"code":"// Zadanie 4: Pętle (for, while)\n\n// TODO 1: za pomocą pętli for (od i = 1 do i <= 10) zbuduj tekst\n// z tabliczką mnożenia dla podanej liczby, np. \"7 x 1 = 7\\n7 x 2 = 14\\n...\"\nfunction tabliczkaMnozenia(liczba) {\n  let wynik = \"\";\n  for (___; ___; ___) {\n    wynik += `${liczba} x ${i} = ${liczba * i}\\n`;\n  }\n  return wynik;\n}\n\nconsole.log(tabliczkaMnozenia(7));\n\n// TODO 2: za pomocą pętli while policz sumę cyfr podanej liczby całkowitej\n// (np. dla 4829: 4 + 8 + 2 + 9 = 23)\n// Wskazówka: n % 10 daje ostatnią cyfrę, Math.floor(n / 10) \"obcina\" ją\nfunction sumaCyfr(liczba) {\n  let n = Math.abs(liczba);\n  let suma = 0;\n  while (___) {\n    suma += ___;\n    n = ___;\n  }\n  return suma;\n}\n\nconsole.log(\"Suma cyfr liczby 4829:\", sumaCyfr(4829));\nconsole.log(\"Suma cyfr liczby 100:\", sumaCyfr(100));"},{"id":5,"code":"// Zadanie 5: Funkcje - deklaracje, parametry, return\n\n// TODO 1: napisz funkcję zwracającą pole prostokąta (a * b)\nfunction poleProstokata(a, b) {\n  // uzupełnij\n}\n\n// TODO 2: napisz funkcję zwracającą obwód prostokąta (2 * (a + b))\nfunction obwodProstokata(a, b) {\n  // uzupełnij\n}\n\n// TODO 3: napisz funkcję, która wywołuje obie powyższe funkcje\n// i zwraca obiekt postaci { pole: ..., obwod: ... }\nfunction opiszProstokat(a, b) {\n  // uzupełnij\n}\n\nconst wynik = opiszProstokat(6, 4);\nconsole.log(`Pole: ${wynik.pole}, obwód: ${wynik.obwod}`);"},{"id":6,"code":"// Zadanie 6: Funkcje strzałkowe (arrow function)\n\nfunction jestParzysta(liczba) {\n  return liczba % 2 === 0;\n}\n\n// TODO 1: przepisz powyższą funkcję jako funkcję strzałkową\n// o nazwie jestParzystaStrzalkowa\nconst jestParzystaStrzalkowa = ___;\n\nconsole.log(jestParzysta(8), jestParzystaStrzalkowa(8));\nconsole.log(jestParzysta(7), jestParzystaStrzalkowa(7));\n\n// TODO 2: napisz funkcję strzałkową podwojKazda(tablica), która zwraca\n// nową tablicę z każdą wartością pomnożoną razy 2 (użyj metody .map())\nconst podwojKazda = ___;\n\nconsole.log(podwojKazda([1, 2, 3]));"},{"id":7,"code":"// Zadanie 7: Obiekt Math i konwersja typów\n\nconst cena1 = 19.49;\nconst cena2 = 19.51;\n\n// TODO 1: wypisz Math.round(), Math.ceil() i Math.floor() dla obu cen\nconsole.log(\"Math.round(19.49):\", ___);\nconsole.log(\"Math.round(19.51):\", ___);\nconsole.log(\"Math.ceil(19.49):\", ___);\nconsole.log(\"Math.floor(19.51):\", ___);\n\n// TODO 2: uzupełnij funkcję zwracającą losową liczbę całkowitą\n// z zakresu [min, max] (włącznie), wykorzystując Math.random() i Math.floor()\nfunction losowaLiczbaCalkowita(min, max) {\n  return ___;\n}\n\nconst los = losowaLiczbaCalkowita(1, 6);\nconsole.log(\"Losowa liczba 1-6:\", los);\n\n// TODO 3: przekonwertuj tekst \"42\" na liczbę za pomocą Number()\nconsole.log(\"Number('42'):\", ___);\n\n// TODO 4: przekonwertuj tekst \"3.14\" na liczbę za pomocą parseFloat()\nconsole.log(\"parseFloat('3.14'):\", ___);\n\n// TODO 5: sprawdź za pomocą isNaN(), czy Number(\"abc\") jest poprawną liczbą\nconsole.log(\"Number('abc') to:\", Number(\"abc\"), \"-> isNaN:\", ___);"},{"id":8,"code":"// Zadanie 8: Metody tekstowe (String)\n\nconst pelneImie = \"  Anna Kowalska  \";\n\n// TODO 1: usuń zbędne spacje z początku i końca tekstu (trim)\nconst przycieta = ___;\nconsole.log(\"Po trim():\", `\"${przycieta}\"`);\n\n// TODO 2: podziel przycięty tekst na tablicę [imię, nazwisko] (split)\nconst czesci = ___;\nconsole.log(\"Części imienia i nazwiska:\", czesci);\n\n// TODO 3: zbuduj inicjały - pierwsza litera imienia (czesci[0].charAt(0))\n// + pierwsza litera nazwiska, zapisane wielkimi literami (toUpperCase)\nconst inicjaly = ___;\nconsole.log(\"Inicjały:\", inicjaly);\n\n// TODO 4: wypisz przycięty tekst wielkimi i małymi literami\nconsole.log(\"Wielkimi literami:\", ___);\nconsole.log(\"Małymi literami:\", ___);\n\n// TODO 5: sprawdź, czy przycięty tekst zawiera fragment \"Kowal\" (includes)\nconsole.log(\"Czy zawiera 'Kowal':\", ___);\n\n// TODO 6: wypisz długość przyciętego tekstu (length)\nconsole.log(\"Długość imienia i nazwiska:\", ___);"},{"id":9,"code":"// Zadanie 9: Zasięg zmiennych (scope)\n\n// TODO 1: zadeklaruj zmienną globalną poziomTrudnosci z wartością \"łatwy\"\nlet poziomTrudnosci = ___;\n\n// TODO 2: uzupełnij funkcję - zmienna poziomTrudnosci poniżej jest\n// zadeklarowana (let) WEWNĄTRZ funkcji, więc jest lokalna i przesłania\n// zmienną globalną o tej samej nazwie - wpisz dla niej wartość \"trudny\"\nfunction zmienPoziom() {\n  let poziomTrudnosci = ___;\n  console.log(\"Wewnątrz funkcji:\", poziomTrudnosci);\n}\n\nconsole.log(\"Przed wywołaniem funkcji:\", poziomTrudnosci);\nzmienPoziom();\nconsole.log(\"Po wywołaniu funkcji:\", poziomTrudnosci);\n\n// TODO 3: sprawdź za pomocą typeof, czy zmienna i (zadeklarowana let\n// w pętli poniżej) jest dostępna POZA pętlą\nfor (let i = 0; i < 3; i++) {\n  // i jest widoczne tylko wewnątrz tego bloku\n}\nconsole.log(\"Czy zmienna i istnieje poza pętlą?\", ___);"},{"id":10,"code":"// Zadanie 10: Obiekty - właściwości, metody, this\n\nconst produkt = {\n  nazwa: \"Klawiatura mechaniczna\",\n  cena: 250,\n  ilosc: 3,\n\n  // TODO 1: napisz metodę wartoscLaczna(), która zwraca cena * ilosc\n  // TEGO obiektu (użyj this.cena oraz this.ilosc)\n  wartoscLaczna() {\n    // uzupełnij\n  },\n\n  // TODO 2: napisz metodę opisz(), która zwraca tekst w stylu\n  // \"Klawiatura mechaniczna: 3 szt. x 250 zł = 750 zł\"\n  // (wykorzystaj this.nazwa, this.ilosc, this.cena oraz this.wartoscLaczna())\n  opisz() {\n    // uzupełnij\n  },\n};\n\nconsole.log(produkt.opisz());\nconsole.log(\"Wartość łączna:\", produkt.wartoscLaczna());\n\n// TODO 3: zmień właściwość ilosc na 5 i sprawdź, czy opisz() się zaktualizował\n___;\nconsole.log(\"Po zmianie ilości:\", produkt.opisz());"},{"id":11,"code":"// Zadanie 11: Obiekty zagnieżdżone, pętla for...in, kopiowanie obiektu\n\nconst uczen = {\n  imie: \"Marek\",\n  klasa: \"3TI\",\n  // TODO 1: dodaj zagnieżdżony obiekt adres z właściwościami\n  // miasto (\"Poznań\") i ulica (\"Szkolna 5\")\n  adres: ___,\n  oceny: [4, 5, 3, 5, 4],\n};\n\n// TODO 2: za pomocą pętli for...in wypisz wszystkie właściwości\n// najwyższego poziomu obiektu uczen (nazwę klucza i jego wartość)\nfor (___) {\n  console.log(___, \"=>\", ___);\n}\n\n// TODO 3: oblicz średnią ocen z tablicy uczen.oceny\n// (możesz użyć reduce() lub zwykłej pętli) i wypisz ją z dwoma\n// miejscami po przecinku (toFixed(2))\nconst sredniaOcen = ___;\nconsole.log(\"Średnia ocen:\", sredniaOcen);\n\n// TODO 4: utwórz płytką kopię obiektu uczen operatorem rozproszenia\nconst kopiaPlytka = ___;\n\n// TODO 5: zmień w kopii miasto w zagnieżdżonym obiekcie adres\nkopiaPlytka.adres.miasto = \"Warszawa\";\n\n// TODO 6: sprawdź i wypisz, czy ta zmiana wpłynęła też na oryginalny\n// obiekt uczen - i zastanów się, dlaczego (patrz materiał nauczyciela cz.5)\nconsole.log(\"Miasto w oryginale po zmianie kopii:\", ___);"}];
+function formatValue(v) {
+  if (typeof v === "string") return v;
+  if (v === undefined) return "undefined";
+  if (v === null) return "null";
+  if (typeof v === "number" || typeof v === "boolean") return String(v);
+  try {
+    var s = JSON.stringify(v, null, 2);
+    return s === undefined ? String(v) : s;
+  } catch (e) {
+    return String(v);
+  }
+}
+
+function runExercise(id) {
+  var textarea = document.getElementById("code-" + id);
+  var output = document.getElementById("output-" + id);
+  var code = textarea.value;
+  var logs = [];
+  var fakeConsole = {
+    log: function () {
+      logs.push(Array.prototype.map.call(arguments, formatValue).join(" "));
+    },
+    error: function () {
+      logs.push("BŁĄD: " + Array.prototype.map.call(arguments, formatValue).join(" "));
+    },
+    warn: function () {
+      logs.push("UWAGA: " + Array.prototype.map.call(arguments, formatValue).join(" "));
+    },
+  };
+  output.classList.remove("output-error");
+  try {
+    var fn = new Function("console", code);
+    fn(fakeConsole);
+    output.textContent = logs.length
+      ? logs.join("\n")
+      : "(brak wyników console.log - dodaj console.log(...), aby zobaczyć wynik)";
+  } catch (err) {
+    output.textContent = "Błąd wykonania: " + err.message;
+    output.classList.add("output-error");
+  }
+}
+
+function resetExercise(id) {
+  var textarea = document.getElementById("code-" + id);
+  var ex = EXERCISES.filter(function (e) {
+    return e.id === id;
+  })[0];
+  if (ex) textarea.value = ex.code;
+  var output = document.getElementById("output-" + id);
+  output.textContent = "";
+  output.classList.remove("output-error");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  EXERCISES.forEach(function (ex) {
+    var ta = document.getElementById("code-" + ex.id);
+    if (ta) ta.value = ex.code;
+  });
+});
+
+</script>
+</body>
+</html>
